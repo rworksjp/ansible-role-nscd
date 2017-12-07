@@ -1,0 +1,21 @@
+---
+# vars file for nscd
+
+# default for nscd_available_cachenames
+nscd_available_cachenames_default: ['passwd','group','hosts','services','protocols','rpc','networks']
+
+# default for nscd_enable_cache
+nscd_enable_cache_default:
+  passwd: 'yes'
+  group: 'yes'
+  hosts: 'yes'
+  services: 'yes'
+  protocols: 'yes'
+  rpc: 'yes'
+  networks: 'yes'
+
+# Valid policy names for `nscd_positive_policy' and `nscd_negative_policy'
+nscd_available_policies: ['fifo','lru','lfu']
+
+# Valid cachenames for `nscd_perform_actual_lookups'
+nscd_perform_actual_lookups_supported_cachenames: ['passwd','group','services']

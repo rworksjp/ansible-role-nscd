@@ -1,0 +1,14 @@
+{% import 'nscd.conf.macros.j2' as mac with context %}
+{% if nscd_threads is defined %}
+threads {{ nscd_threads }}
+{% endif %}{#
+#}{{ mac.write_yesno_attribute("enable-cache", nscd_enable_cache, default=nscd_enable_cache_default) }}{#
+#}{{ mac.write_numeric_attribute("positive-time-to-live", nscd_positive_time_to_live) }}{#
+#}{{ mac.write_policy_attribute("positive-policy", nscd_positive_policy) }}{#
+#}{{ mac.write_numeric_attribute("negative-time-to-live", nscd_negative_time_to_live) }}{#
+#}{{ mac.write_policy_attribute("negative-policy", nscd_negative_policy) }}{#
+#}{{ mac.write_numeric_attribute("negative-confidence-threshold", nscd_negative_confidence_threshold) }}{#
+#}{{ mac.write_numeric_attribute("suggested-size", nscd_suggested_size) }}{#
+#}{{ mac.write_numeric_attribute("keep-hot-count", nscd_keep_hot_count) }}{#
+#}{{ mac.write_yesno_attribute("perform-actual-lookups", nscd_perform_actual_lookups, keys=nscd_perform_actual_lookups_supported_cachenames) }}{#
+#}

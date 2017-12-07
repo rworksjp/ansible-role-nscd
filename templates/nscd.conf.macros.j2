@@ -1,0 +1,26 @@
+{% macro write_yesno_attribute(attr, config, keys=nscd_available_cachenames, default={}) %}
+{% for cachename in keys %}
+{% if (cachename in config) -%}
+{{ attr }} {{ cachename }} {% if config[cachename] %}yes{% else %}no{% endif %}
+
+{% elif default and cachename in default -%}
+{{ attr }} {{ cachename }} {{ default[cachename] }}
+{% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% macro write_numeric_attribute(attr, config) %}
+{% for cachename in nscd_available_cachenames %}
+{% if cachename in config -%}
+{{ attr }} {{ cachename }} {{ config[cachename] }}
+{% endif %}
+{% endfor %}
+{% endmacro %}
+
+{% macro write_policy_attribute(attr, config) %}
+{% for cachename in nscd_available_cachenames %}
+{% if cachename in config and config[cachename] in nscd_available_policies -%} 
+{{ attr }} {{ cachename }} {{ config[cachename] }}
+{% endif %}
+{% endfor %}
+{% endmacro %}

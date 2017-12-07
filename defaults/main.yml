@@ -1,0 +1,55 @@
+---
+# defaults file for nscd
+
+# Available cache names.
+nscd_available_cachenames: '{{nscd_available_cachenames_default}}'
+
+nscd_service_state: started
+nscd_service_enabled: yes
+
+# Define number of threads
+#nscd_threads 8
+
+# Enables or disables the cache for specified cachename.
+nscd_enable_cache: '{{nscd_enable_cache_default}}'
+
+# Define positive-time-to-live for specific cachenames (in seconds)
+nscd_positive_time_to_live: {}
+#   passwd: 3600
+#   group: 3600
+
+# Define positive-policy for specific cachenames (fifo|lru|lfu)
+nscd_positive_policy: {}
+#   passwd: fifo
+#   group: lfu
+
+# Define negative-time-to-live for specific cachenames (in seconds)
+nscd_negative_time_to_live: {}
+#   passwd: 60
+#   group: 60
+
+# Define negative-policy for specific cachenames (fifo|lru|lfu)
+nscd_negative_policy: {}
+#   passwd: fifo
+#   group: lru
+
+# Define negative-confidence-threshold for specific cachenames
+# (Only available on FreeBSD 10.0 or higher)
+nscd_negative_confidence_threshold: {}
+#   passwd: 1
+#   group: 1
+
+# Define suggested-size for specific cachenames
+nscd_suggested_size: {}
+#   passwd: 255
+#   group: 255
+
+# Define keep-hot-count for specific cachenames
+nscd_keep_hot_count: {}
+#   passwd: 2048
+#   group: 2048
+
+# Define perform-actual-lookups for specific cachenames (yes|no)
+# (available only `passwd', `group' and `services' cachenames).
+nscd_perform_actual_lookups: {}
+#   group: yes

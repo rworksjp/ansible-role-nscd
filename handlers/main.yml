@@ -1,0 +1,9 @@
+---
+# handlers file for nscd
+
+- name: restart nscd
+  service:
+    name: nscd
+    state: restarted
+  when:
+    - 'nscd_service_state == "started"'

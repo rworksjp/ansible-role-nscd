@@ -1,0 +1,17 @@
+---
+# tasks file for nscd
+
+- name: Configure nscd
+  template:
+    src: nscd.conf.j2
+    dest: /etc/nscd.conf
+  register: nscd_conf_result
+  notify: restart nscd
+  tags: configuration
+
+- name: Ensure nscd started/stopped
+  service:
+    name: nscd
+    state: '{{ nscd_service_state }}'
+    enabled: '{{ nscd_service_enabled }}'
+  tags: service

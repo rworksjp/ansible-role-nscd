@@ -1,0 +1,17 @@
+galaxy_info:
+  author: KIKUCHI Koichiro
+  description: Configure FreeBSD's nscd
+  company: Rworks, Inc.
+  license: BSD
+  min_ansible_version: 1.2
+  platforms:
+  - name: FreeBSD
+    versions:
+    # We use "all" here since nscd(8) first appeared in FreeBSD 7.0 and all
+    # FreeBSD versions supported by galaxy (8.0 or higher) have nscd(8)
+    - all
+  galaxy_tags:
+  - cache
+  - dns
+  - system
+dependencies: []
