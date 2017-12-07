@@ -19,7 +19,7 @@ before_install:
   - echo "${VAGRANT_SHA256SUM}  vagrant.deb" | sha256sum -c
   - sudo dpkg -i vagrant.deb
   - sudo apt-get install -y libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev qemu-kvm libvirt-bin
-  - vagrant plugin install vagrant-libvirt
+  - vagrant plugin install vagrant-libvirt --plugin-version 0.0.35
 
 install:
   - pip install ansible ansible-lint
