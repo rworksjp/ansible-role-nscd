@@ -2,12 +2,6 @@
 language: python
 python: "2.7"
 
-cache:
-  directories:
-    - $HOME/.cache/pip
-    - $HOME/.vagrant.d/boxes
-    - $HOME/.ccache
-
 sudo: required
 dist: trusty
 
@@ -49,5 +43,5 @@ script:
 
 notifications:
   email: false
-  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+#  webhooks: https://galaxy.ansible.com/api/v1/notifications/
 
