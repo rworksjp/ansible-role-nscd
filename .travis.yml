@@ -19,6 +19,8 @@ before_install:
   - echo "${VAGRANT_SHA256SUM}  vagrant.deb" | sha256sum -c
   - sudo dpkg -i vagrant.deb
   - sudo apt-get install -y libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev qemu-kvm libvirt-bin
+  # Use libvirt plugin 0.0.35 to avoid "dhcp_leases: undefined method"
+  # see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/669 for detail
   - vagrant plugin install vagrant-libvirt --plugin-version 0.0.35
 
 install:
@@ -33,7 +35,7 @@ install:
   - popd
 
 script:
-  - ansible-playbook -i localhost, --syntax-check tests/test.yml
+  - ansible-playbook -i localhost, --syntax-check --extra-vars=role_dir_name=${PWD##*/} tests/test.yml 
   - ansible-lint tests/test.yml
   - pushd tests
   # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
