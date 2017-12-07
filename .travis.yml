@@ -7,8 +7,8 @@ dist: trusty
 
 env:
   global:
-    - VAGRANT_URL=https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
-    - VAGRANT_SHA256SUM=2f9498a83b3d650fcfcfe0ec7971070fcd3803fad6470cf7da871caf2564d84f
+    - VAGRANT_URL=https://releases.hashicorp.com/vagrant/1.8.5/vagrant_1.8.5_x86_64.deb
+    - VAGRANT_SHA256SUM=30ee435c3358c6a835ea52cf710f4e50caa0e77cb721332132a2d3386a8745d9
 
 before_install:
   - sudo apt-get update
