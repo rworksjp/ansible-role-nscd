@@ -28,10 +28,8 @@ install:
   - printf '[defaults]\nroles_path=../' | tee ansible.cfg
   - pushd tests
   # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
-#  - sudo vagrant up --provider=libvirt --no-provision
-  - vagrant up --provider=libvirt --no-provision
-#  - sudo vagrant provision --provision-with bootstrap
-  - vagrant provision --provision-with bootstrap
+  - sudo vagrant up --provider=libvirt --no-provision
+  - sudo vagrant provision --provision-with bootstrap
   - popd
 
 script:
@@ -39,9 +37,8 @@ script:
   - ansible-lint tests/test.yml
   - pushd tests
   # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
-#  - travis_wait 40 sudo ./provision-ansible.sh
-  - vagrant provision --provision-with ansible
-#  - sudo vagrant provision --provision-with test
+  - travis_wait 40 sudo ./provision-ansible.sh
+  - sudo vagrant provision --provision-with test
   - vagrant provision --provision-with test
   - popd
 
