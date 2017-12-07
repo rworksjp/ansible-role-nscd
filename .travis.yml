@@ -1,0 +1,53 @@
+---
+language: python
+python: "2.7"
+
+cache:
+  directories:
+    - $HOME/.cache/pip
+    - $HOME/.vagrant.d/boxes
+    - $HOME/.ccache
+
+sudo: required
+dist: trusty
+
+env:
+  global:
+    - VAGRANT_URL=https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
+    - VAGRANT_SHA256SUM=2f9498a83b3d650fcfcfe0ec7971070fcd3803fad6470cf7da871caf2564d84f
+
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install -y python-pip
+  - sudo apt-get install -y rsync
+  - curl -Lo vagrant.deb "${VAGRANT_URL}"
+  - sha256sum vagrant.deb
+  - echo "${VAGRANT_SHA256SUM}  vagrant.deb" | sha256sum -c
+  - sudo dpkg -i vagrant.deb
+  - sudo apt-get install -y libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev qemu-kvm libvirt-bin
+  - vagrant plugin install vagrant-libvirt
+
+install:
+  - pip install ansible ansible-lint
+  - ansible --version
+  - ansible-lint --version
+  - printf '[defaults]\nroles_path=../' | tee ansible.cfg
+  - pushd tests
+  # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
+#  - sudo vagrant up --provider=libvirt --no-provision
+#  - sudo vagrant provision --provision-with bootstrap
+  - popd
+
+script:
+  - ansible-playbook -i localhost, --syntax-check tests/test.yml
+  - ansible-lint tests/test.yml
+  - pushd tests
+  # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
+#  - travis_wait 40 sudo ./provision-ansible.sh
+#  - sudo vagrant provision --provision-with test
+  - popd
+
+notifications:
+  email: false
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/
+
