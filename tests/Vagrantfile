@@ -27,7 +27,10 @@ Vagrant.configure(2) do |config|
     freebsd.vm.provision "test", type: "shell", inline: <<-SHELL
       pkg update -q
       pkg install -q -y ca_root_nss curl
+      echo $PATH
+      which curl
       sudo sh -c "`curl -sL https://raw.github.com/rylnd/shpec/master/install.sh`"
+      which shpec
       (cd /vagrant && shpec)
     SHELL
   end
