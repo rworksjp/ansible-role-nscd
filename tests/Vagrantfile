@@ -30,6 +30,7 @@ Vagrant.configure(2) do |config|
       echo $PATH
       which curl
       sudo sh -c "`curl -sL https://raw.github.com/rylnd/shpec/master/install.sh`"
+      ls /usr/local/bin
       which shpec
       (cd /vagrant && shpec)
     SHELL
