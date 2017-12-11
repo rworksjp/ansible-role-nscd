@@ -8,7 +8,6 @@ Vagrant.configure(2) do |config|
     freebsd.vm.provider :libvirt do |v|
       v.driver = 'qemu'
       v.nested = 'yes'
-      v.cpu_mode = 'pass-through'
       v.memory = 2048
       v.graphics_type = 'none'
     end
