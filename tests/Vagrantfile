@@ -27,11 +27,8 @@ Vagrant.configure(2) do |config|
     freebsd.vm.provision "test", type: "shell", inline: <<-SHELL
       pkg update -q
       pkg install -q -y ca_root_nss curl
-      curl --cipher ECDHE-RSA-AES128-GCM-SHA256 -vL https://raw.github.com/rylnd/shpec/master/install.sh
-      echo "curl exit with $?"
-      curl -k -vL https://raw.github.com/rylnd/shpec/master/install.sh
-      echo "curl exit with $?"
-      curl -sL https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
+      fetch -o - https://raw.github.com/rylnd/shpec/master/install.sh
+      fetch -o - https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
       (cd /vagrant && shpec)
     SHELL
   end
