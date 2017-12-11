@@ -9,6 +9,8 @@ env:
   global:
     - VAGRANT_URL=https://releases.hashicorp.com/vagrant/1.8.5/vagrant_1.8.5_x86_64.deb
     - VAGRANT_SHA256SUM=30ee435c3358c6a835ea52cf710f4e50caa0e77cb721332132a2d3386a8745d9
+    - SHPEC_URL=https://github.com/rylnd/shpec/archive/0.3.0.tar.gz
+    - SHPEC_SHA256SUM=0d8ef28ea7bdcc46654ca06678b26b8d69ea282ed01074959e14e376afe00e74
 
 before_install:
   - sudo apt-get update
@@ -30,6 +32,9 @@ install:
   - printf '[defaults]\nroles_path=../' | tee ansible.cfg
   - pushd tests
   # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
+  - curl -Lo shpec.tar.gz https://github.com/rylnd/shpec/archive/0.3.0.tar.gz
+  - sha256sum shpec.tar.gz
+  - echo "${SHPEC_SHA256SUM}  shpec.tar.gz" | sha256sum -c
   - sudo vagrant up freebsd --provider=libvirt --no-provision
   - sudo vagrant provision freebsd --provision-with bootstrap
   - popd
