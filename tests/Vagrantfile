@@ -27,7 +27,8 @@ Vagrant.configure(2) do |config|
     freebsd.vm.provision "test", type: "shell", inline: <<-SHELL
       pkg update -q
       pkg install -q -y ca_root_nss curl
-      fetch -o - https://raw.github.com/rylnd/shpec/master/install.sh
+      fetch -v https://raw.github.com/rylnd/shpec/master/install.sh
+      echo "fetch exited with $?"
       fetch -o - https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
       (cd /vagrant && shpec)
     SHELL
