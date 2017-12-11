@@ -7,6 +7,7 @@ Vagrant.configure(2) do |config|
 
     freebsd.vm.provider :libvirt do |v|
       v.driver = 'qemu'
+      v.cpu_model = 'Nehalem'
       v.memory = 2048
       v.graphics_type = 'none'
     end
@@ -27,9 +28,8 @@ Vagrant.configure(2) do |config|
     freebsd.vm.provision "test", type: "shell", inline: <<-SHELL
       pkg update -q
       pkg install -q -y ca_root_nss curl
-      # Use DES-CBC3-SHA for chiper to avoid "bad record mac" on server hello
-      curl --ciphers DES-CBC3-SHA -sL https://raw.github.com/rylnd/shpec/master/install.sh | sed -e 's/curl/curl --ciphers DES-CBC3-SHA/'
-      curl --ciphers DES-CBC3-SHA -sL https://raw.github.com/rylnd/shpec/master/install.sh | sed -e 's/curl/curl --ciphers DES-CBC3-SHA/' | sudo sh -ex
+      curl -v -L https://raw.github.com/rylnd/shpec/master/install.sh
+      #curl --ciphers DES-CBC3-SHA -sL https://raw.github.com/rylnd/shpec/master/install.sh | sed -e 's/curl/curl --ciphers DES-CBC3-SHA/' | sudo sh -ex
       (cd /vagrant && shpec)
     SHELL
   end
