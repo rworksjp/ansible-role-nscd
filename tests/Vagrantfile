@@ -7,7 +7,6 @@ Vagrant.configure(2) do |config|
 
     freebsd.vm.provider :libvirt do |v|
       v.driver = 'qemu'
-      v.nested = 'yes'
       v.memory = 2048
       v.graphics_type = 'none'
     end
@@ -28,14 +27,11 @@ Vagrant.configure(2) do |config|
     freebsd.vm.provision "test", type: "shell", inline: <<-SHELL
       uname -a
       freebsd-version
-      sudo kldload aesni
-      dmesg | tail
-      grep -i cpu /var/run/dmesg.boot
       pkg update -q
       pkg install -q -y ca_root_nss curl
-      curl -v -L https://raw.github.com/rylnd/shpec/master/install.sh
+      curl --cipher DES-CBC3-SHA -v -L https://raw.github.com/rylnd/shpec/master/install.sh
       echo "curl exited with $?"
-      curl -sL https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
+      curl --cipher DES-CBC3-SHA -sL https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
       (cd /vagrant && shpec)
     SHELL
   end
