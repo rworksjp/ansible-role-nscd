@@ -28,9 +28,12 @@ Vagrant.configure(2) do |config|
       pkg update -q
       pkg install -q -y ca_root_nss curl
       echo curl -L https://raw.github.com/rylnd/shpec/master/install.sh
-      curl -sL https://raw.github.com/rylnd/shpec/master/install.sh
+      curl -D - http://github.com/
+      echo "1) curl exit with $?"
+      curl -vL https://raw.github.com/rylnd/shpec/master/install.sh
+      echo "2) curl exit with $?"
       curl -sL https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
-      which shpec
+      echo "3) curl exit with $?"
       (cd /vagrant && shpec)
     SHELL
   end
