@@ -25,6 +25,8 @@ Vagrant.configure(2) do |config|
     end
 
     freebsd.vm.provision "test", type: "shell", inline: <<-SHELL
+      uname -a
+      freebsd-version
       pkg update -q
       pkg install -q -y ca_root_nss curl
       fetch -v https://raw.github.com/rylnd/shpec/master/install.sh
