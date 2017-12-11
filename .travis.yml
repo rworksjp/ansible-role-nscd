@@ -9,6 +9,8 @@ env:
   global:
     - VAGRANT_URL=https://releases.hashicorp.com/vagrant/2.0.1/vagrant_2.0.1_x86_64.deb
     - VAGRANT_SHA256SUM=2f9498a83b3d650fcfcfe0ec7971070fcd3803fad6470cf7da871caf2564d84f
+    - SHPEC_URL=https://github.com/rylnd/shpec/archive/0.3.0.tar.gz
+    - SHPEC_SHA256SUM=0d8ef28ea7bdcc46654ca06678b26b8d69ea282ed01074959e14e376afe00e74
 
 before_install:
   - sudo apt-get update
@@ -19,7 +21,9 @@ before_install:
   - echo "${VAGRANT_SHA256SUM}  vagrant.deb" | sha256sum -c
   - sudo dpkg -i vagrant.deb
   - sudo apt-get install -y libxslt-dev libxml2-dev libvirt-dev zlib1g-dev ruby-dev qemu-kvm libvirt-bin
-  - vagrant plugin install vagrant-libvirt
+  # Use libvirt plugin 0.0.35 to avoid "dhcp_leases: undefined method"
+  # see https://github.com/vagrant-libvirt/vagrant-libvirt/issues/669 for detail
+  - vagrant plugin install vagrant-libvirt --plugin-version 0.0.35
 
 install:
   - pip install ansible ansible-lint
@@ -27,21 +31,24 @@ install:
   - ansible-lint --version
   - printf '[defaults]\nroles_path=../' | tee ansible.cfg
   - pushd tests
+  # Download shpec outside VM to prevent from occurrence of the SSL handshake error.
+  - curl -Lo shpec.tar.gz https://github.com/rylnd/shpec/archive/0.3.0.tar.gz
+  - sha256sum shpec.tar.gz
+  - echo "${SHPEC_SHA256SUM}  shpec.tar.gz" | sha256sum -c
   # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
-#  - sudo vagrant up --provider=libvirt --no-provision
-#  - sudo vagrant provision --provision-with bootstrap
+  - sudo vagrant up freebsd --provider=libvirt --no-provision
+  - sudo vagrant provision freebsd --provision-with bootstrap
   - popd
 
 script:
-  - ansible-playbook -i localhost, --syntax-check tests/test.yml
+  - ansible-playbook -i localhost, --syntax-check --extra-vars=role_dir_name=${PWD##*/} tests/test.yml
   - ansible-lint tests/test.yml
   - pushd tests
   # after `adduser travis libvirtd`, re-login is required to take effect, so run with sudo
-#  - travis_wait 40 sudo ./provision-ansible.sh
-#  - sudo vagrant provision --provision-with test
+  - travis_wait 40 sudo ./provision-ansible.sh
+  - sudo vagrant provision freebsd --provision-with test
   - popd
 
 notifications:
   email: false
-#  webhooks: https://galaxy.ansible.com/api/v1/notifications/
-
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

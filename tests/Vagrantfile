@@ -2,35 +2,37 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-#  config.ssh.shell = "/bin/sh"
-  config.vm.box = "generic/freebsd11"
+  # Use 'freebsd' as vm name instead of 'default', because 'default vm is
+  # already running in sudo-able trusty image on travis.
+  config.vm.define :freebsd do |freebsd|
+    freebsd.vm.box = "generic/freebsd11"
 
-  config.vm.provider :hyperv do |v|
-    v.memory = 1024
+    freebsd.vm.provider :libvirt do |v|
+      v.driver = 'qemu'
+      v.memory = 2048
+      v.graphics_type = 'none'
+    end
+
+    freebsd.vm.synced_folder ".", "/vagrant", type: 'rsync'
+
+    freebsd.vm.provision "bootstrap", type: "shell", inline: "sudo pkg install -q -y python2"
+
+    freebsd.vm.provision :ansible do |ansible|
+      ansible.playbook = "test.yml"
+      ansible.raw_arguments = [
+        "--extra-vars=roles_path=../../",
+        "--extra-vars=role_dir_name=#{File.basename(File.dirname(ENV['PWD']))}",
+        "--extra-vars=ansible_python_interpreter=/usr/local/bin/python2.7",
+      ]
+    end
+
+    freebsd.vm.provision "test", type: "shell", inline: <<-SHELL
+      pkg update -q
+      pkg install -q -y ca_root_nss curl
+      mkdir -p /tmp/shpec
+      tar zxf /vagrant/shpec.tar.gz --strip-component 1 -C /tmp/shpec
+      (cd /tmp/shpec && make install)
+      (cd /vagrant && shpec)
+    SHELL
   end
-  config.vm.provider :libvirt do |v|
-    v.driver = 'qemu'
-    v.memory = 2048
-    v.graphics_type = 'none'
-  end
-
-  config.vm.synced_folder ".", "/vagrant", type: 'rsync'
-
-  config.vm.provision "bootstrap", type: "shell", inline: "sudo pkg install -q -y python2"
-
-  config.vm.provision :ansible do |ansible|
-    ansible.playbook = "test.yml"
-    ansible.raw_arguments = [
-      "--extra-vars=roles_path=../../",
-      "--extra-vars=role_dir_name=#{File.basename(File.dirname(ENV['PWD']))}",
-      "--extra-vars=ansible_python_interpreter=/usr/local/bin/python2.7",
-    ]
-  end
-
-  config.vm.provision "test", type: "shell", inline: <<-SHELL
-    pkg update -q
-    pkg install -q -y ca_root_nss curl
-    sudo sh -c "`curl -sL https://raw.github.com/rylnd/shpec/master/install.sh`"
-    (cd /vagrant && shpec)
-  SHELL
 end
