@@ -29,9 +29,12 @@ Vagrant.configure(2) do |config|
       freebsd-version
       pkg update -q
       pkg install -q -y ca_root_nss curl
-      fetch -v https://raw.github.com/rylnd/shpec/master/install.sh
-      echo "fetch exited with $?"
-      fetch -o - https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
+      echo '[/usr/local/lib/libcurl.so.4]' >> /etc/libmap.conf
+      echo 'libssl.so.8	libssl.so.9' >> /etc/libmap.conf
+      echo 'libcrypto.so.8	libcrypto.so.9' >> /etc/libmap.conf
+      curl -v -L https://raw.github.com/rylnd/shpec/master/install.sh
+      echo "curl exited with $?"
+      curl -sL https://raw.github.com/rylnd/shpec/master/install.sh | sudo sh -x
       (cd /vagrant && shpec)
     SHELL
   end
